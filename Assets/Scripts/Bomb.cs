@@ -7,10 +7,16 @@ using System;
 
 public class Bomb : MonoBehaviour
 {
-    public static event Action<GameObject> BombExploded;
+    public event Action<GameObject> BombExploded;
 
     [SerializeField] private float _explosionForce = 300;
-    [SerializeField] private float _explosionRadius = 4;
+    [SerializeField] private float _explosionRadius = 2;
+    [SerializeField] private Renderer _renderer;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+    }
 
     private void OnEnable()
     {
@@ -50,16 +56,14 @@ public class Bomb : MonoBehaviour
         float colorChannelAMax = 1f;
         float colorChannelA = 1f;
 
-        var renderer = GetComponent<Renderer>();
-
-        while (renderer.material.color.a > 0)
+        while (_renderer.material.color.a > 0)
         {
-            renderer.material.color = new Color(0, 0, 0, colorChannelA -= colorChannelAMax * Time.deltaTime / delay);
+            _renderer.material.color = new Color(0, 0, 0, colorChannelA -= colorChannelAMax * Time.deltaTime / delay);
 
             yield return wait;
         }
 
-        renderer.material.color = new Color(0, 0, 0, 1);
+        _renderer.material.color = new Color(0, 0, 0, 1);
 
         Explode();
     }

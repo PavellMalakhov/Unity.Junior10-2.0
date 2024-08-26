@@ -7,7 +7,7 @@ using System;
 
 public class Cube : MonoBehaviour
 {
-    public static event Action<GameObject> CubeFalled;
+    public event Action<GameObject> Falled;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -34,7 +34,7 @@ public class Cube : MonoBehaviour
 
         GetComponent<Renderer>().material.color = cubeStartColor;
 
-        CubeFalled?.Invoke(gameObject);
+        Falled?.Invoke(gameObject);
     }
 
     private Color GetRandomColor()

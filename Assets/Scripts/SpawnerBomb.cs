@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class SpawnerBomb : BasePool
+public class SpawnerBomb : Attribute
 {
     [SerializeField] private Vector3 _bombPosition;
+    [SerializeField] private SpawnerCube _spawnerCube;
 
     private void FixedUpdate()
     {
@@ -14,21 +15,24 @@ public class SpawnerBomb : BasePool
 
     private void OnEnable()
     {
-        Cube.CubeFalled += GetBomb;
-        Bomb.BombExploded += ReturnBomb;
+        _spawnerCube.CubeFalled += GetBomb;
     }
 
     private void OnDisable()
     {
-        Cube.CubeFalled -= GetBomb;
-        Bomb.BombExploded -= ReturnBomb;
+        _spawnerCube.CubeFalled -= GetBomb;
     }
 
-    protected override void ActionOnGet(GameObject obj)
+    protected override void FallAndExplode(GameObject obj)
     {
         obj.transform.position = _bombPosition;
 
-        base.ActionOnGet(obj);
+        base.FallAndExplode(obj);
+
+        if (obj.TryGetComponent<Bomb>(out Bomb bomb))
+        {
+            bomb.BombExploded += ReturnBombInPool;
+        }
     }
 
     private void GetBomb(GameObject gameObject)
@@ -38,8 +42,13 @@ public class SpawnerBomb : BasePool
         Pool.Get();
     }
 
-    private void ReturnBomb(GameObject gameObject)
+    private void ReturnBombInPool(GameObject gameObject)
     {
+        if (gameObject.TryGetComponent<Bomb>(out Bomb bomb))
+        {
+            bomb.BombExploded -= ReturnBombInPool;
+        }
+
         Pool.Release(gameObject);
     }
 }

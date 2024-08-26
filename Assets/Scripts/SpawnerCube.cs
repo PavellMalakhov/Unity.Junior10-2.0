@@ -1,13 +1,16 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
-public class SpawnerCube : BasePool
+public class SpawnerCube : Attribute
 {
+    public event Action<GameObject> CubeFalled;
+
     private void Start()
     {
-        float rainStartTime = 0f;
         float cubeRepeatTime = 0.05f;
 
-        InvokeRepeating(nameof(GetCube), rainStartTime, cubeRepeatTime);
+        StartCoroutine(RepeatGetCube(cubeRepeatTime));
     }
 
     private void FixedUpdate()
@@ -18,33 +21,44 @@ public class SpawnerCube : BasePool
             $"Количество активных объектов на сцене = {Pool.CountActive}");
     }
 
-    private void OnEnable()
+    private IEnumerator RepeatGetCube(float delay)
     {
-        Cube.CubeFalled += ReturnCubeInCloud;
+        var wait = new WaitForSeconds(delay);
+
+        while (enabled)
+        {
+            Pool.Get();
+
+            yield return wait;
+        }
     }
 
-    private void OnDisable()
-    {
-        Cube.CubeFalled -= ReturnCubeInCloud;
-    }
-
-    protected override void ActionOnGet(GameObject obj)
+    protected override void FallAndExplode(GameObject obj)
     {
         float cloudSize = 5f;
         float cloudHeight = 9f;
 
-        obj.transform.position = new Vector3(Random.Range(-cloudSize, cloudSize), cloudHeight, Random.Range(-cloudSize, cloudSize));
+        obj.transform.position = new Vector3(
+            UnityEngine.Random.Range(-cloudSize, cloudSize), cloudHeight, 
+            UnityEngine.Random.Range(-cloudSize, cloudSize));
 
-        base.ActionOnGet(obj);
+        base.FallAndExplode(obj);
+
+        if (obj.TryGetComponent<Cube>(out Cube cube))
+        {
+            cube.Falled += ReturnCubeInPool;
+        }
     }
 
-    private void GetCube()
+    private void ReturnCubeInPool(GameObject gameObject)
     {
-        Pool.Get();
-    }
+        if (gameObject.TryGetComponent<Cube>(out Cube cube))
+        {
+            cube.Falled -= ReturnCubeInPool;
+        }
 
-    private void ReturnCubeInCloud(GameObject gameObject)
-    {
+        CubeFalled?.Invoke(gameObject);
+        
         Pool.Release(gameObject);
     }
 }

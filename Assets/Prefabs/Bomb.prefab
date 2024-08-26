@@ -147,4 +147,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _explosionForce: 300
-  _explosionRadius: 4
+  _explosionRadius: 2
+  _renderer: {fileID: 0}

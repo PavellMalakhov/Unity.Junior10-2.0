@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 108916943}
   - component: {fileID: 108916942}
   m_Layer: 5
-  m_Name: Cube
+  m_Name: CubeInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1163,7 +1163,7 @@ GameObject:
   - component: {fileID: 780176325}
   - component: {fileID: 780176326}
   m_Layer: 0
-  m_Name: PoolWithCube
+  m_Name: SpawnerCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1408,7 +1408,7 @@ GameObject:
   - component: {fileID: 1299652961}
   - component: {fileID: 1299652960}
   m_Layer: 0
-  m_Name: PoolWithBombs
+  m_Name: SpawnerBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1431,6 +1431,7 @@ MonoBehaviour:
   PoolMaxSize: 100
   PoolInfo: {fileID: 1429429563}
   _bombPosition: {x: 0, y: 0, z: 0}
+  _spawnerCube: {fileID: 780176326}
 --- !u!4 &1299652961
 Transform:
   m_ObjectHideFlags: 0
@@ -1458,7 +1459,7 @@ GameObject:
   - component: {fileID: 1429429564}
   - component: {fileID: 1429429563}
   m_Layer: 5
-  m_Name: Bomb
+  m_Name: BombInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
