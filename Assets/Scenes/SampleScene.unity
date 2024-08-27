@@ -584,7 +584,7 @@ GameObject:
   - component: {fileID: 147842609}
   - component: {fileID: 147842608}
   - component: {fileID: 147842607}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 196548883}
   - component: {fileID: 196548882}
   - component: {fileID: 196548881}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1197,7 +1197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7114678872785168752, guid: 7f4fce0089f2bd1439cbf79f165289f4, type: 3}
-  PoolCapaciti: 40
+  PoolCapaciti: 90
   PoolMaxSize: 100
   PoolInfo: {fileID: 108916942}
 --- !u!1 &886996943
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 886996946}
   - component: {fileID: 886996945}
   - component: {fileID: 886996944}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1427,7 +1427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 3514339360275840843, guid: ebb02db936ee87246a775becdf2dedce, type: 3}
-  PoolCapaciti: 40
+  PoolCapaciti: 90
   PoolMaxSize: 100
   PoolInfo: {fileID: 1429429563}
   _bombPosition: {x: 0, y: 0, z: 0}

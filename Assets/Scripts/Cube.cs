@@ -7,7 +7,14 @@ using System;
 
 public class Cube : MonoBehaviour
 {
+    [SerializeField] private Renderer _renderer;
+
     public event Action<GameObject> Falled;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -21,7 +28,7 @@ public class Cube : MonoBehaviour
         float lifetimeMinCube = 2f;
         float lifetimeMaxCube = 5f;
         float delay = UnityEngine.Random.Range(lifetimeMinCube, lifetimeMaxCube);
-        Color cubeStartColor = new Color(1, 1, 1);
+        Color cubeStartColor = new (1, 1, 1);
 
         StartCoroutine(CountUp(delay, cubeStartColor));
     }
@@ -32,7 +39,7 @@ public class Cube : MonoBehaviour
         
         yield return wait;
 
-        GetComponent<Renderer>().material.color = cubeStartColor;
+        _renderer.material.color = cubeStartColor;
 
         Falled?.Invoke(gameObject);
     }

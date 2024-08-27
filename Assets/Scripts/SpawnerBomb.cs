@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnerBomb : Attribute
+public class SpawnerBomb : PoolConstruction
 {
     [SerializeField] private Vector3 _bombPosition;
     [SerializeField] private SpawnerCube _spawnerCube;
@@ -23,11 +23,11 @@ public class SpawnerBomb : Attribute
         _spawnerCube.CubeFalled -= GetBomb;
     }
 
-    protected override void FallAndExplode(GameObject obj)
+    protected override void SetActive(GameObject obj)
     {
         obj.transform.position = _bombPosition;
 
-        base.FallAndExplode(obj);
+        base.SetActive(obj);
 
         if (obj.TryGetComponent<Bomb>(out Bomb bomb))
         {

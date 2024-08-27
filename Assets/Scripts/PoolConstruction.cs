@@ -2,10 +2,10 @@ using UnityEngine;
 using UnityEngine.Pool;
 using TMPro;
 
-public class Attribute : MonoBehaviour
+public class PoolConstruction : MonoBehaviour
 {
     [SerializeField] protected GameObject Prefab;
-    [SerializeField] protected int PoolCapaciti = 40;
+    [SerializeField] protected int PoolCapaciti = 90;
     [SerializeField] protected int PoolMaxSize = 100;
     [SerializeField] protected TextMeshProUGUI PoolInfo;
 
@@ -16,7 +16,7 @@ public class Attribute : MonoBehaviour
     {
         Pool = new ObjectPool<GameObject>(
         createFunc: () => Instantiate(Prefab),
-        actionOnGet: (obj) => FallAndExplode(obj),
+        actionOnGet: (obj) => SetActive(obj),
         actionOnRelease: (obj) => obj.SetActive(false),
         actionOnDestroy: (obj) => Destroy(obj),
         collectionCheck: true,
@@ -24,7 +24,7 @@ public class Attribute : MonoBehaviour
         maxSize: PoolMaxSize);
     }
 
-    protected virtual void FallAndExplode(GameObject obj)
+    protected virtual void SetActive(GameObject obj)
     {
         obj.SetActive(true);
 

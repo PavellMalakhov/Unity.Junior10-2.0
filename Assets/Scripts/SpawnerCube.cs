@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class SpawnerCube : Attribute
+public class SpawnerCube : PoolConstruction
 {
     public event Action<GameObject> CubeFalled;
+
+    private Transform _transformStart;
 
     private void Start()
     {
@@ -33,8 +35,10 @@ public class SpawnerCube : Attribute
         }
     }
 
-    protected override void FallAndExplode(GameObject obj)
+    protected override void SetActive(GameObject obj)
     {
+        _transformStart = obj.transform;
+
         float cloudSize = 5f;
         float cloudHeight = 9f;
 
@@ -42,7 +46,7 @@ public class SpawnerCube : Attribute
             UnityEngine.Random.Range(-cloudSize, cloudSize), cloudHeight, 
             UnityEngine.Random.Range(-cloudSize, cloudSize));
 
-        base.FallAndExplode(obj);
+        base.SetActive(obj);
 
         if (obj.TryGetComponent<Cube>(out Cube cube))
         {
@@ -58,7 +62,20 @@ public class SpawnerCube : Attribute
         }
 
         CubeFalled?.Invoke(gameObject);
-        
+
+        ResetStatus(gameObject);
+
         Pool.Release(gameObject);
+    }
+
+    private void ResetStatus(GameObject gameObject)
+    {
+        gameObject.transform.SetPositionAndRotation(_transformStart.position, _transformStart.rotation);
+
+        if (gameObject.TryGetComponent<Rigidbody>(out Rigidbody rigidbody))
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+        }
     }
 }

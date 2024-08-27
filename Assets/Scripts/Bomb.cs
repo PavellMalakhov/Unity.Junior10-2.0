@@ -63,6 +63,9 @@ public class Bomb : MonoBehaviour
             yield return wait;
         }
 
+        _renderer.material.color = new Color(255, 0, 0, 1);
+        yield return wait;
+
         _renderer.material.color = new Color(0, 0, 0, 1);
 
         Explode();
