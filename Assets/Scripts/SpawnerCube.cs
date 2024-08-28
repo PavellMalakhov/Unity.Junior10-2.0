@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class SpawnerCube : PoolConstruction
+public class SpawnerCube : Spawner
 {
     public event Action<GameObject> CubeFalled;
 
@@ -15,21 +15,13 @@ public class SpawnerCube : PoolConstruction
         StartCoroutine(RepeatGetCube(cubeRepeatTime));
     }
 
-    private void FixedUpdate()
-    {
-        PoolInfo.text = ($"SpawnerCube\n" +
-            $"Количество заспавненых объектов за всё время (появление на сцене) = {AmountAllTimeObj}\n" +
-            $"Количество созданных объектов = {Pool.CountAll}\n" +
-            $"Количество активных объектов на сцене = {Pool.CountActive}");
-    }
-
     private IEnumerator RepeatGetCube(float delay)
     {
         var wait = new WaitForSeconds(delay);
 
         while (enabled)
         {
-            Pool.Get();
+            GetGameObject();
 
             yield return wait;
         }
@@ -50,22 +42,24 @@ public class SpawnerCube : PoolConstruction
 
         if (obj.TryGetComponent<Cube>(out Cube cube))
         {
-            cube.Falled += ReturnCubeInPool;
+            cube.Falled += ReturnInPool;
         }
     }
 
-    private void ReturnCubeInPool(GameObject gameObject)
+    protected override void ReturnInPool(GameObject gameObject)
     {
         if (gameObject.TryGetComponent<Cube>(out Cube cube))
         {
-            cube.Falled -= ReturnCubeInPool;
+            cube.Falled -= ReturnInPool;
         }
 
         CubeFalled?.Invoke(gameObject);
 
         ResetStatus(gameObject);
 
-        Pool.Release(gameObject);
+        ReleaseGameObject(gameObject);
+
+        base.ReturnInPool(gameObject);
     }
 
     private void ResetStatus(GameObject gameObject)

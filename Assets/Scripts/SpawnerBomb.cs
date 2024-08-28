@@ -1,17 +1,9 @@
 using UnityEngine;
 
-public class SpawnerBomb : PoolConstruction
+public class SpawnerBomb : Spawner
 {
     [SerializeField] private Vector3 _bombPosition;
     [SerializeField] private SpawnerCube _spawnerCube;
-
-    private void FixedUpdate()
-    {
-        PoolInfo.text = ($"SpawnerBomb\n" +
-            $"Количество заспавненых объектов за всё время (появление на сцене) = {AmountAllTimeObj}\n" +
-            $"Количество созданных объектов = {Pool.CountAll}\n" +
-            $"Количество активных объектов на сцене = {Pool.CountActive}");
-    }
 
     private void OnEnable()
     {
@@ -31,7 +23,7 @@ public class SpawnerBomb : PoolConstruction
 
         if (obj.TryGetComponent<Bomb>(out Bomb bomb))
         {
-            bomb.BombExploded += ReturnBombInPool;
+            bomb.BombExploded += ReturnInPool;
         }
     }
 
@@ -39,16 +31,18 @@ public class SpawnerBomb : PoolConstruction
     {
         _bombPosition = gameObject.transform.position;
 
-        Pool.Get();
+        GetGameObject();
     }
 
-    private void ReturnBombInPool(GameObject gameObject)
+    protected override void ReturnInPool(GameObject gameObject)
     {
         if (gameObject.TryGetComponent<Bomb>(out Bomb bomb))
         {
-            bomb.BombExploded -= ReturnBombInPool;
+            bomb.BombExploded -= ReturnInPool;
         }
 
-        Pool.Release(gameObject);
+        ReleaseGameObject(gameObject);
+
+        base.ReturnInPool(gameObject);
     }
 }

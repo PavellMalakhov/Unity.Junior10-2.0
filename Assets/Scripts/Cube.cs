@@ -11,6 +11,8 @@ public class Cube : MonoBehaviour
 
     public event Action<GameObject> Falled;
 
+    private bool _isPlatformHit = false;
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
@@ -18,12 +20,17 @@ public class Cube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Init();
+        if (other.TryGetComponent<Platform>(out _) && _isPlatformHit == false)
+        {
+            _isPlatformHit = true;
+            
+            ChangeState();
+        }
     }
 
-    private void Init()
+    private void ChangeState()
     {
-        GetComponent<Renderer>().material.color = GetRandomColor();
+        _renderer.material.color = GetRandomColor();
 
         float lifetimeMinCube = 2f;
         float lifetimeMaxCube = 5f;
@@ -40,6 +47,8 @@ public class Cube : MonoBehaviour
         yield return wait;
 
         _renderer.material.color = cubeStartColor;
+
+        _isPlatformHit = false;
 
         Falled?.Invoke(gameObject);
     }
