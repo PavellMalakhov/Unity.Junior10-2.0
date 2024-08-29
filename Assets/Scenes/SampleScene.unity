@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawner: {fileID: 780176326}
-  PoolInfo: {fileID: 108916942}
+  _poolInfo: {fileID: 108916942}
 --- !u!1 &113921188
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,7 +1237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4c1feb6ec4747e41ac4c3ae2828b5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 7114678872785168752, guid: 7f4fce0089f2bd1439cbf79f165289f4, type: 3}
+  Prefab: {fileID: 4961294210911647729, guid: 7f4fce0089f2bd1439cbf79f165289f4, type: 3}
   PoolCapaciti: 95
   PoolMaxSize: 100
 --- !u!1 &886996943
@@ -1479,7 +1479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889fe7d91a9435f4ea50cb3694089fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 3514339360275840843, guid: ebb02db936ee87246a775becdf2dedce, type: 3}
+  Prefab: {fileID: 2893956834285553932, guid: ebb02db936ee87246a775becdf2dedce, type: 3}
   PoolCapaciti: 95
   PoolMaxSize: 100
   _bombPosition: {x: 0, y: 0, z: 0}
@@ -1646,8 +1646,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5fe9b01cdf6f1439c10cb9c83fef9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 1299652960}
-  PoolInfo: {fileID: 1429429563}
+  _spawner: {fileID: 0}
+  _poolInfo: {fileID: 1429429563}
 --- !u!1 &1926809185
 GameObject:
   m_ObjectHideFlags: 0

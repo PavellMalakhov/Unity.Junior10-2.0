@@ -2,39 +2,39 @@ using UnityEngine;
 using UnityEngine.Pool;
 using System;
 
-public class Spawner : MonoBehaviour
+public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private GameObject Prefab;
+    [SerializeField] private T Prefab;
     [SerializeField] private int PoolCapaciti = 95;
     [SerializeField] private int PoolMaxSize = 100;
 
-    public event Action<int, int, int> PoolChanged;
-
-    private ObjectPool<GameObject> Pool;
+    private ObjectPool<T> Pool;
     private int AmountAllTimeObj = 0;
+
+    public event Action<int, int, int> PoolChanged;
 
     protected void Awake()
     {
-        Pool = new ObjectPool<GameObject>(
+        Pool = new ObjectPool<T>(
         createFunc: () => Instantiate(Prefab),
         actionOnGet: (obj) => SetActive(obj),
-        actionOnRelease: (obj) => obj.SetActive(false),
+        actionOnRelease: (obj) => obj.gameObject.SetActive(false),
         actionOnDestroy: (obj) => Destroy(obj),
         collectionCheck: true,
         defaultCapacity: PoolCapaciti,
         maxSize: PoolMaxSize);
     }
 
-    protected virtual void SetActive(GameObject obj)
+    protected virtual void SetActive(T obj)
     {
-        obj.SetActive(true);
+        obj.gameObject.SetActive(true);
 
         AmountAllTimeObj++;
 
         PoolChanged?.Invoke(AmountAllTimeObj, Pool.CountAll, Pool.CountActive);
     }
 
-    protected virtual void ReturnInPool(GameObject gameObject)
+    protected virtual void ReturnInPool(T gameObject)
     {
         PoolChanged?.Invoke(AmountAllTimeObj, Pool.CountAll, Pool.CountActive);
     }
@@ -44,7 +44,7 @@ public class Spawner : MonoBehaviour
         Pool.Get();
     }
 
-    protected void ReleaseGameObject(GameObject gameObject)
+    protected void ReleaseGameObject(T gameObject)
     {
         Pool.Release(gameObject);
     }

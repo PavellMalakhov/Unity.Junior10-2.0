@@ -9,9 +9,9 @@ public class Cube : MonoBehaviour
 {
     [SerializeField] private Renderer _renderer;
 
-    public event Action<GameObject> Falled;
-
     private bool _isPlatformHit = false;
+
+    public event Action<Cube> Falled;
 
     private void Awake()
     {
@@ -50,7 +50,7 @@ public class Cube : MonoBehaviour
 
         _isPlatformHit = false;
 
-        Falled?.Invoke(gameObject);
+        Falled?.Invoke(this);
     }
 
     private Color GetRandomColor()

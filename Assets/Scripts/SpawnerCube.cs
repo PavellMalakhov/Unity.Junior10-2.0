@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class SpawnerCube : Spawner
-{
-    public event Action<GameObject> CubeFalled;
 
+public class SpawnerCube : Spawner<Cube>
+{
     private Transform _transformStart;
+
+    public event Action<Cube> CubeFalled;
 
     private void Start()
     {
@@ -27,7 +28,7 @@ public class SpawnerCube : Spawner
         }
     }
 
-    protected override void SetActive(GameObject obj)
+    protected override void SetActive(Cube obj)
     {
         _transformStart = obj.transform;
 
@@ -40,18 +41,22 @@ public class SpawnerCube : Spawner
 
         base.SetActive(obj);
 
-        if (obj.TryGetComponent<Cube>(out Cube cube))
-        {
-            cube.Falled += ReturnInPool;
-        }
+        obj.Falled += ReturnInPool;
+
+        //if (obj.TryGetComponent<Cube>(out Cube cube))
+        //{
+        //    cube.Falled += ReturnInPool;
+        //}
     }
 
-    protected override void ReturnInPool(GameObject gameObject)
+    protected override void ReturnInPool(Cube gameObject)
     {
-        if (gameObject.TryGetComponent<Cube>(out Cube cube))
-        {
-            cube.Falled -= ReturnInPool;
-        }
+        //if (gameObject.TryGetComponent<Cube>(out Cube cube))
+        //{
+        //    cube.Falled -= ReturnInPool;
+        //}
+
+        gameObject.Falled -= ReturnInPool;
 
         CubeFalled?.Invoke(gameObject);
 
@@ -62,7 +67,7 @@ public class SpawnerCube : Spawner
         base.ReturnInPool(gameObject);
     }
 
-    private void ResetStatus(GameObject gameObject)
+    private void ResetStatus(Cube gameObject)
     {
         gameObject.transform.SetPositionAndRotation(_transformStart.position, _transformStart.rotation);
 
