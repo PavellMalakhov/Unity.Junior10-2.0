@@ -28,53 +28,40 @@ public class SpawnerCube : Spawner<Cube>
         }
     }
 
-    protected override void SetActive(Cube obj)
+    protected override void SetActive(Cube cube)
     {
-        _transformStart = obj.transform;
+        _transformStart = cube.transform;
 
         float cloudSize = 5f;
         float cloudHeight = 9f;
 
-        obj.transform.position = new Vector3(
+        cube.transform.position = new Vector3(
             UnityEngine.Random.Range(-cloudSize, cloudSize), cloudHeight, 
             UnityEngine.Random.Range(-cloudSize, cloudSize));
 
-        base.SetActive(obj);
+        base.SetActive(cube);
 
-        obj.Falled += ReturnInPool;
-
-        //if (obj.TryGetComponent<Cube>(out Cube cube))
-        //{
-        //    cube.Falled += ReturnInPool;
-        //}
+        cube.Falled += ReturnInPool;
     }
 
-    protected override void ReturnInPool(Cube gameObject)
+    protected override void ReturnInPool(Cube cube)
     {
-        //if (gameObject.TryGetComponent<Cube>(out Cube cube))
-        //{
-        //    cube.Falled -= ReturnInPool;
-        //}
+        cube.Falled -= ReturnInPool;
 
-        gameObject.Falled -= ReturnInPool;
+        CubeFalled?.Invoke(cube);
 
-        CubeFalled?.Invoke(gameObject);
+        ResetStatus(cube);
 
-        ResetStatus(gameObject);
+        ReleaseGameObject(cube);
 
-        ReleaseGameObject(gameObject);
-
-        base.ReturnInPool(gameObject);
+        base.ReturnInPool(cube);
     }
 
-    private void ResetStatus(Cube gameObject)
+    private void ResetStatus(Cube cube)
     {
-        gameObject.transform.SetPositionAndRotation(_transformStart.position, _transformStart.rotation);
+        cube.transform.SetPositionAndRotation(_transformStart.position, _transformStart.rotation);
 
-        if (gameObject.TryGetComponent<Rigidbody>(out Rigidbody rigidbody))
-        {
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
-        }
+        cube.Rigidbody.velocity = Vector3.zero;
+        cube.Rigidbody.angularVelocity = Vector3.zero;
     }
 }

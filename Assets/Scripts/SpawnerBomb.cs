@@ -15,38 +15,28 @@ public class SpawnerBomb : Spawner<Bomb>
         _spawnerCube.CubeFalled -= GetBomb;
     }
 
-    protected override void SetActive(Bomb obj)
+    protected override void SetActive(Bomb bomb)
     {
-        obj.transform.position = _bombPosition;
+        bomb.transform.position = _bombPosition;
 
-        base.SetActive(obj);
+        base.SetActive(bomb);
 
-        //if (obj.TryGetComponent<Bomb>(out Bomb bomb))
-        //{
-        //    bomb.BombExploded += ReturnInPool;
-        //}
-
-        obj.BombExploded += ReturnInPool;
+        bomb.Exploded += ReturnInPool;
     }
 
-    private void GetBomb(Cube gameObject)
+    private void GetBomb(Cube cube)
     {
-        _bombPosition = gameObject.transform.position;
+        _bombPosition = cube.transform.position;
 
         GetGameObject();
     }
 
-    protected override void ReturnInPool(Bomb gameObject)
+    protected override void ReturnInPool(Bomb bomb)
     {
-        //if (gameObject.TryGetComponent<Bomb>(out Bomb bomb))
-        //{
-        //    bomb.BombExploded -= ReturnInPool;
-        //}
+        bomb.Exploded -= ReturnInPool;
 
-        gameObject.BombExploded -= ReturnInPool;
+        ReleaseGameObject(bomb);
 
-        ReleaseGameObject(gameObject);
-
-        base.ReturnInPool(gameObject);
+        base.ReturnInPool(bomb);
     }
 }

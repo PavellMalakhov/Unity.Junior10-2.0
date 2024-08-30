@@ -4,48 +4,48 @@ using System;
 
 public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private T Prefab;
-    [SerializeField] private int PoolCapaciti = 95;
-    [SerializeField] private int PoolMaxSize = 100;
+    [SerializeField] private T _prefab;
+    [SerializeField] private int _poolCapaciti = 95;
+    [SerializeField] private int _poolMaxSize = 100;
 
-    private ObjectPool<T> Pool;
-    private int AmountAllTimeObj = 0;
+    private ObjectPool<T> _pool;
+    private int _amountAllTimeObj = 0;
 
-    public event Action<int, int, int> PoolChanged;
+    public event Action<PoolInfo> PoolChanged;
 
     protected void Awake()
     {
-        Pool = new ObjectPool<T>(
-        createFunc: () => Instantiate(Prefab),
+        _pool = new ObjectPool<T>(
+        createFunc: () => Instantiate(_prefab),
         actionOnGet: (obj) => SetActive(obj),
         actionOnRelease: (obj) => obj.gameObject.SetActive(false),
         actionOnDestroy: (obj) => Destroy(obj),
         collectionCheck: true,
-        defaultCapacity: PoolCapaciti,
-        maxSize: PoolMaxSize);
+        defaultCapacity: _poolCapaciti,
+        maxSize: _poolMaxSize);
     }
 
     protected virtual void SetActive(T obj)
     {
         obj.gameObject.SetActive(true);
 
-        AmountAllTimeObj++;
+        _amountAllTimeObj++;
 
-        PoolChanged?.Invoke(AmountAllTimeObj, Pool.CountAll, Pool.CountActive);
+        PoolChanged?.Invoke(new PoolInfo(_amountAllTimeObj, _pool.CountAll, _pool.CountActive));
     }
 
     protected virtual void ReturnInPool(T gameObject)
     {
-        PoolChanged?.Invoke(AmountAllTimeObj, Pool.CountAll, Pool.CountActive);
+        PoolChanged?.Invoke(new PoolInfo(_amountAllTimeObj, _pool.CountAll, _pool.CountActive));
     }
 
     protected void GetGameObject()
     {
-        Pool.Get();
+        _pool.Get();
     }
 
     protected void ReleaseGameObject(T gameObject)
     {
-        Pool.Release(gameObject);
+        _pool.Release(gameObject);
     }
 }

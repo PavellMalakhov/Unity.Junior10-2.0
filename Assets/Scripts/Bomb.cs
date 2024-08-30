@@ -11,7 +11,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float _explosionRadius = 2;
     [SerializeField] private Renderer _renderer;
 
-    public event Action<Bomb> BombExploded;
+    public event Action<Bomb> Exploded;
 
     private void Awake()
     {
@@ -46,7 +46,7 @@ public class Bomb : MonoBehaviour
             cube.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
         }
 
-        BombExploded?.Invoke(this);
+        Exploded?.Invoke(this);
     }
 
     private IEnumerator Timer(float delay)

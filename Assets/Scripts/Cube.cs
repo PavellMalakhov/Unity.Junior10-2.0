@@ -13,9 +13,16 @@ public class Cube : MonoBehaviour
 
     public event Action<Cube> Falled;
 
+    public Rigidbody Rigidbody { get; private set; }
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+
+        if (this.TryGetComponent<Rigidbody>(out Rigidbody rigidbody))
+        {
+            Rigidbody = rigidbody;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,7 +30,7 @@ public class Cube : MonoBehaviour
         if (other.TryGetComponent<Platform>(out _) && _isPlatformHit == false)
         {
             _isPlatformHit = true;
-            
+
             ChangeState();
         }
     }
@@ -35,7 +42,7 @@ public class Cube : MonoBehaviour
         float lifetimeMinCube = 2f;
         float lifetimeMaxCube = 5f;
         float delay = UnityEngine.Random.Range(lifetimeMinCube, lifetimeMaxCube);
-        Color cubeStartColor = new (1, 1, 1);
+        Color cubeStartColor = new(1, 1, 1);
 
         StartCoroutine(CountUp(delay, cubeStartColor));
     }
@@ -43,7 +50,7 @@ public class Cube : MonoBehaviour
     private IEnumerator CountUp(float delay, Color cubeStartColor)
     {
         var wait = new WaitForSeconds(delay);
-        
+
         yield return wait;
 
         _renderer.material.color = cubeStartColor;
